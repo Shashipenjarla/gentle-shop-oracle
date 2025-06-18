@@ -4,6 +4,7 @@ import HeroSection from '@/components/HeroSection';
 import ProductGrid from '@/components/ProductGrid';
 import CategoryFilter from '@/components/CategoryFilter';
 import ShoppingCart, { CartItem } from '@/components/ShoppingCart';
+import VoiceInterface from '@/components/VoiceInterface';
 import { Product } from '@/components/ProductCard';
 import { sampleProducts, categories } from '@/data/products';
 import { useToast } from '@/hooks/use-toast';
@@ -77,6 +78,14 @@ const Index = () => {
     });
   };
 
+  const handleCheckOrderStatus = () => {
+    // Mock order status - in real app this would fetch from backend
+    toast({
+      title: "Order Status",
+      description: "You have 2 active orders. Last order: Delivered today!",
+    });
+  };
+
   const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -129,6 +138,13 @@ const Index = () => {
         items={cartItems}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
+      />
+
+      <VoiceInterface
+        onSearch={setSearchQuery}
+        onAddToCart={handleAddToCart}
+        products={filteredProducts}
+        onCheckOrderStatus={handleCheckOrderStatus}
       />
     </div>
   );

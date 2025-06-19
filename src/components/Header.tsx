@@ -118,6 +118,7 @@ const Header = ({ cartItemCount, onCartClick, onSearchChange, greenWalletData }:
             <a href="#" className="whitespace-nowrap hover:underline font-medium">Home & Garden</a>
             <a href="/social" className="whitespace-nowrap hover:underline font-medium">Social Shopping</a>
             <a href="/ar-navigator" className="whitespace-nowrap hover:underline font-medium">AR Navigator</a>
+            <a href="/virtual-tryon" className="whitespace-nowrap hover:underline font-medium">Virtual Try-On</a>
             <a href="#" className="whitespace-nowrap hover:underline font-medium">Pharmacy</a>
             <a href="#" className="whitespace-nowrap hover:underline font-medium">Auto & Tires</a>
             <a href="#" className="whitespace-nowrap hover:underline font-medium">Sports</a>

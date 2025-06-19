@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import SocialShopping from "./pages/SocialShopping";
 import ARStoreNavigator from "./pages/ARStoreNavigator";
+import VirtualTryOnPage from "./pages/VirtualTryOnPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/social" element={<SocialShopping />} />
           <Route path="/ar-navigator" element={<ARStoreNavigator />} />
+          <Route path="/virtual-tryon" element={<VirtualTryOnPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

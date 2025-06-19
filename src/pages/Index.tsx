@@ -7,6 +7,7 @@ import ShoppingCart, { CartItem } from '@/components/ShoppingCart';
 import VoiceInterface from '@/components/VoiceInterface';
 import PostPurchaseAssistant from '@/components/PostPurchaseAssistant';
 import SizePredictor from '@/components/SizePredictor';
+import QuickReorder from '@/components/QuickReorder';
 import { Product } from '@/components/ProductCard';
 import { sampleProducts, categories } from '@/data/products';
 import { useToast } from '@/hooks/use-toast';
@@ -130,6 +131,12 @@ const Index = () => {
 
           {/* Main content */}
           <div className="flex-1 space-y-8">
+            {/* Quick Reorder */}
+            <QuickReorder 
+              products={sampleProducts.filter(p => p.category === 'Groceries' || p.category === 'Health & Beauty')}
+              onAddToCart={handleAddToCart}
+            />
+
             {/* Post-Purchase Assistant */}
             <PostPurchaseAssistant 
               recentPurchases={recentPurchases}

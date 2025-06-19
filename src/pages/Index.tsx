@@ -8,6 +8,7 @@ import VoiceInterface from '@/components/VoiceInterface';
 import { Product } from '@/components/ProductCard';
 import { sampleProducts, categories } from '@/data/products';
 import { useToast } from '@/hooks/use-toast';
+import { useGreenWallet } from '@/hooks/useGreenWallet';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,6 +16,7 @@ const Index = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { toast } = useToast();
+  const { walletData, addGreenPoints } = useGreenWallet();
 
   // Filter products based on search and category
   const filteredProducts = useMemo(() => {
@@ -52,6 +54,11 @@ const Index = () => {
       title: "Added to cart",
       description: `${product.name} has been added to your cart.`,
     });
+
+    // Award green points for eco-friendly products
+    if (product.ecoData?.isEcoFriendly && product.ecoData.greenPoints > 0) {
+      addGreenPoints(product.ecoData.greenPoints, product.name);
+    }
   };
 
   const handleUpdateQuantity = (productId: string, quantity: number) => {
@@ -94,6 +101,7 @@ const Index = () => {
         cartItemCount={cartItemCount}
         onCartClick={() => setIsCartOpen(true)}
         onSearchChange={setSearchQuery}
+        greenWalletData={walletData}
       />
       
       <HeroSection />

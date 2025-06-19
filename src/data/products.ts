@@ -10,7 +10,12 @@ export const sampleProducts: Product[] = [
     rating: 4.5,
     reviewCount: 2847,
     badge: 'Bestseller',
-    category: 'Electronics'
+    category: 'Electronics',
+    ecoData: {
+      carbonFootprint: 8.2,
+      isEcoFriendly: false,
+      greenPoints: 0
+    }
   },
   {
     id: '2',
@@ -20,7 +25,12 @@ export const sampleProducts: Product[] = [
     image: '/placeholder.svg',
     rating: 4.3,
     reviewCount: 1523,
-    category: 'Electronics'
+    category: 'Electronics',
+    ecoData: {
+      carbonFootprint: 12.5,
+      isEcoFriendly: false,
+      greenPoints: 0
+    }
   },
   {
     id: '3',
@@ -69,7 +79,12 @@ export const sampleProducts: Product[] = [
     image: '/placeholder.svg',
     rating: 4.2,
     reviewCount: 234,
-    category: 'Groceries'
+    category: 'Groceries',
+    ecoData: {
+      carbonFootprint: 0.3,
+      isEcoFriendly: true,
+      greenPoints: 15
+    }
   },
   {
     id: '8',

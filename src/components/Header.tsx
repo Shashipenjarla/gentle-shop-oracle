@@ -3,14 +3,17 @@ import { Search, ShoppingCart, Menu, User, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import GreenWalletWidget from './GreenWalletWidget';
+import { GreenWalletData } from '@/hooks/useGreenWallet';
 
 interface HeaderProps {
   cartItemCount: number;
   onCartClick: () => void;
   onSearchChange: (query: string) => void;
+  greenWalletData?: GreenWalletData;
 }
 
-const Header = ({ cartItemCount, onCartClick, onSearchChange }: HeaderProps) => {
+const Header = ({ cartItemCount, onCartClick, onSearchChange, greenWalletData }: HeaderProps) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +66,10 @@ const Header = ({ cartItemCount, onCartClick, onSearchChange }: HeaderProps) => 
               <Button variant="ghost" size="icon" className="relative">
                 <Heart className="h-6 w-6" />
               </Button>
+              
+              {greenWalletData && (
+                <GreenWalletWidget walletData={greenWalletData} />
+              )}
               
               <Button variant="ghost" size="icon">
                 <User className="h-6 w-6" />

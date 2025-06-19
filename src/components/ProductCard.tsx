@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
+import EcoImpactBadge from './EcoImpactBadge';
 
 export interface Product {
   id: string;
@@ -14,6 +15,11 @@ export interface Product {
   reviewCount: number;
   badge?: string;
   category: string;
+  ecoData?: {
+    carbonFootprint: number; // kg CO2
+    isEcoFriendly: boolean;
+    greenPoints: number;
+  };
 }
 
 interface ProductCardProps {
@@ -100,6 +106,16 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
               </span>
             )}
           </div>
+
+          {/* Eco Impact */}
+          {product.ecoData && (
+            <EcoImpactBadge
+              carbonFootprint={product.ecoData.carbonFootprint}
+              isEcoFriendly={product.ecoData.isEcoFriendly}
+              greenPoints={product.ecoData.greenPoints}
+              size="sm"
+            />
+          )}
 
           {/* Add to cart button */}
           <Button 

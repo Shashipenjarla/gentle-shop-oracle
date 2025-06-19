@@ -5,6 +5,8 @@ import ProductGrid from '@/components/ProductGrid';
 import CategoryFilter from '@/components/CategoryFilter';
 import ShoppingCart, { CartItem } from '@/components/ShoppingCart';
 import VoiceInterface from '@/components/VoiceInterface';
+import PostPurchaseAssistant from '@/components/PostPurchaseAssistant';
+import SizePredictor from '@/components/SizePredictor';
 import { Product } from '@/components/ProductCard';
 import { sampleProducts, categories } from '@/data/products';
 import { useToast } from '@/hooks/use-toast';
@@ -95,6 +97,9 @@ const Index = () => {
 
   const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  // Mock recent purchases for demo
+  const recentPurchases = sampleProducts.slice(0, 3);
+
   return (
     <div className="min-h-screen bg-background">
       <Header
@@ -110,18 +115,27 @@ const Index = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="lg:w-64 flex-shrink-0">
-            <div className="sticky top-8">
+            <div className="sticky top-8 space-y-6">
               <CategoryFilter
                 categories={categories}
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
                 productCounts={productCounts}
               />
+              
+              {/* Size Predictor */}
+              <SizePredictor />
             </div>
           </div>
 
           {/* Main content */}
-          <div className="flex-1">
+          <div className="flex-1 space-y-8">
+            {/* Post-Purchase Assistant */}
+            <PostPurchaseAssistant 
+              recentPurchases={recentPurchases}
+              onAddToCart={handleAddToCart}
+            />
+
             <div className="mb-6">
               <h2 className="text-2xl font-bold mb-2">
                 {selectedCategory || 'All Products'}

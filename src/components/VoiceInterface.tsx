@@ -3,15 +3,18 @@ import { Mic, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Product } from './ProductCard';
+import { findDeals, getStockInfo, activateCoupon } from '@/data/deals';
 
 interface VoiceInterfaceProps {
   onSearch: (query: string) => void;
   onAddToCart: (product: Product) => void;
   products: Product[];
   onCheckOrderStatus: () => void;
+  onShowDeals?: (category: string) => void;
+  onCheckStock?: (productName: string) => void;
 }
 
-const VoiceInterface = ({ onSearch, onAddToCart, products, onCheckOrderStatus }: VoiceInterfaceProps) => {
+const VoiceInterface = ({ onSearch, onAddToCart, products, onCheckOrderStatus, onShowDeals, onCheckStock }: VoiceInterfaceProps) => {
   const [isListening, setIsListening] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('en-US');
   const recognitionRef = useRef<any>(null);
@@ -68,8 +71,65 @@ const VoiceInterface = ({ onSearch, onAddToCart, products, onCheckOrderStatus }:
   }, [currentLanguage]);
 
   const handleVoiceCommand = (transcript: string) => {
+    // Deals commands
+    if (transcript.includes('show me deals') || transcript.includes('deals on') || transcript.includes('discounts') ||
+        transcript.includes('मुझे डील दिखाओ') || transcript.includes('छूट') ||
+        transcript.includes('డీల్స్ చూపు') || transcript.includes('తగ్గింపులు')) {
+      const category = extractCategory(transcript);
+      const deals = findDeals(category);
+      
+      if (deals.length > 0) {
+        let dealsSummary = `Found ${deals.length} deal(s)`;
+        if (category) dealsSummary += ` for ${category}`;
+        dealsSummary += `: ${deals.map(d => `${d.discountPercentage}% off ${d.title}`).join(', ')}`;
+        
+        toast({
+          title: "Voice deals found",
+          description: dealsSummary,
+        });
+        
+        if (onShowDeals) onShowDeals(category);
+      } else {
+        toast({
+          title: "No deals found",
+          description: category ? `No active deals for ${category}` : "No active deals available",
+          variant: "destructive"
+        });
+      }
+    }
+    // Stock check commands
+    else if (transcript.includes('in stock') || transcript.includes('stock') || transcript.includes('available') ||
+             transcript.includes('स्टॉक') || transcript.includes('उपलब्ध') ||
+             transcript.includes('స్టాక్') || transcript.includes('అందుబాటులో')) {
+      const productName = extractProductFromStock(transcript);
+      const stockInfo = getStockInfo(productName);
+      
+      if (stockInfo.length > 0) {
+        const inStockStores = stockInfo.filter(store => store.inStock);
+        if (inStockStores.length > 0) {
+          toast({
+            title: "In stock!",
+            description: `${productName} available at ${inStockStores.length} store(s)`,
+          });
+        } else {
+          toast({
+            title: "Out of stock",
+            description: `${productName} not currently available`,
+            variant: "destructive"
+          });
+        }
+        
+        if (onCheckStock) onCheckStock(productName);
+      } else {
+        toast({
+          title: "Product not found",
+          description: "Please try saying the product name clearly",
+          variant: "destructive"
+        });
+      }
+    }
     // Search commands
-    if (transcript.includes('search') || transcript.includes('find') || 
+    else if (transcript.includes('search') || transcript.includes('find') || 
         transcript.includes('खोज') || transcript.includes('ढूंढ') ||
         transcript.includes('వెతక') || transcript.includes('కనుగొను')) {
       const searchTerm = extractSearchTerm(transcript);
@@ -114,7 +174,7 @@ const VoiceInterface = ({ onSearch, onAddToCart, products, onCheckOrderStatus }:
     else {
       toast({
         title: "Command not recognized",
-        description: "Try: 'Search for [item]', 'Add [item] to cart', or 'Check order status'",
+        description: "Try: 'Search for [item]', 'Show me deals on shoes', 'Is iPhone 15 in stock?', or 'Add [item] to cart'",
         variant: "destructive"
       });
     }
@@ -159,6 +219,29 @@ const VoiceInterface = ({ onSearch, onAddToCart, products, onCheckOrderStatus }:
       product.name.toLowerCase().includes(name.toLowerCase()) ||
       name.toLowerCase().includes(product.name.toLowerCase())
     ) || null;
+  };
+
+  const extractCategory = (transcript: string): string => {
+    const categories = ['shoes', 'electronics', 'groceries', 'clothing', 'beauty', 'home', 'sports'];
+    return categories.find(cat => transcript.toLowerCase().includes(cat)) || '';
+  };
+
+  const extractProductFromStock = (transcript: string): string => {
+    const patterns = [
+      /is (.+) in stock/,
+      /(.+) available/,
+      /stock of (.+)/,
+      /(.+) स्टॉक/,
+      /(.+) స్టాక్/
+    ];
+    
+    for (const pattern of patterns) {
+      const match = transcript.match(pattern);
+      if (match) return match[1].trim();
+    }
+    
+    // Fallback - extract product name from transcript
+    return transcript.replace(/(is|in|stock|available|स्टॉक|స్టాక్)/gi, '').trim();
   };
 
   const startListening = () => {

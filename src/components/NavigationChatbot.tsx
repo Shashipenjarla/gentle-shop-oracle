@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 import { findItemInStore, getAisleById, walmartStoreLayout } from '@/data/storeLayout';
+import { getStockInfo, findDeals, activateCoupon, StoreStock, Deal } from '@/data/deals';
 
 interface Message {
   id: string;
@@ -17,6 +18,8 @@ interface Message {
     items: any[];
     aisle?: string;
   };
+  stockInfo?: StoreStock[];
+  dealsInfo?: Deal[];
 }
 
 interface NavigationChatbotProps {
@@ -48,6 +51,65 @@ const NavigationChatbot = ({ onNavigateToAisle, onHighlightItem }: NavigationCha
 
   const generateBotResponse = (userQuery: string): Message => {
     const query = userQuery.toLowerCase();
+    
+    // Check for stock queries
+    if (query.includes('stock') || query.includes('available') || query.includes('in stock')) {
+      const stockInfo = getStockInfo(query);
+      if (stockInfo.length > 0) {
+        const inStockStores = stockInfo.filter(store => store.inStock);
+        let responseText = '';
+        
+        if (inStockStores.length > 0) {
+          responseText = `Great news! I found stock availability:\n\n`;
+          inStockStores.forEach(store => {
+            responseText += `📍 ${store.storeName} (${store.distance} mi away)\n`;
+            responseText += `   ${store.quantity} units in stock\n`;
+            responseText += `   ${store.address}\n\n`;
+          });
+        } else {
+          responseText = `Sorry, the item appears to be out of stock at nearby stores. `;
+          if (stockInfo.length > 0) {
+            responseText += `You can check these locations:\n\n`;
+            stockInfo.forEach(store => {
+              responseText += `📍 ${store.storeName} - Currently out of stock\n`;
+            });
+          }
+        }
+        
+        return {
+          id: Date.now().toString(),
+          text: responseText,
+          sender: 'bot',
+          timestamp: new Date(),
+          stockInfo: stockInfo
+        };
+      }
+    }
+
+    // Check for deals queries
+    if (query.includes('deal') || query.includes('discount') || query.includes('sale') || query.includes('offer')) {
+      const category = extractCategory(query);
+      const deals = findDeals(category || '');
+      
+      if (deals.length > 0) {
+        let responseText = `🎉 I found ${deals.length} active deal(s):\n\n`;
+        deals.forEach(deal => {
+          responseText += `${deal.title}\n`;
+          responseText += `${deal.description}\n`;
+          responseText += `💰 ${deal.discountPercentage}% off - was $${deal.originalPrice}, now $${deal.discountedPrice}\n`;
+          responseText += `🎫 Coupon: ${deal.couponCode}\n\n`;
+        });
+        responseText += `Would you like me to activate any of these coupons?`;
+        
+        return {
+          id: Date.now().toString(),
+          text: responseText,
+          sender: 'bot',
+          timestamp: new Date(),
+          dealsInfo: deals
+        };
+      }
+    }
     
     // Find items matching the query
     const foundItems = findItemInStore(query);
@@ -107,10 +169,15 @@ const NavigationChatbot = ({ onNavigateToAisle, onHighlightItem }: NavigationCha
     // Default response for unknown queries
     return {
       id: Date.now().toString(),
-      text: `I couldn't find "${userQuery}" in our store. Try asking about items like "toothpaste", "milk", "iPhone", or "jeans". You can also ask about store locations like "restrooms" or "checkout".`,
+      text: `I couldn't find "${userQuery}" in our store. Try asking about:\n• Items: "toothpaste", "milk", "iPhone"\n• Stock: "Is iPhone 15 in stock?"\n• Deals: "Show me deals on shoes"\n• Locations: "restrooms", "checkout"`,
       sender: 'bot',
       timestamp: new Date()
     };
+  };
+
+  const extractCategory = (query: string): string => {
+    const categories = ['shoes', 'electronics', 'groceries', 'clothing', 'beauty'];
+    return categories.find(cat => query.includes(cat)) || '';
   };
 
   const handleSendMessage = async () => {
@@ -142,6 +209,16 @@ const NavigationChatbot = ({ onNavigateToAisle, onHighlightItem }: NavigationCha
     toast({
       title: "Navigation Started",
       description: `Navigating to ${itemName} in aisle ${aisleId}`,
+    });
+  };
+
+  const handleActivateCoupon = (couponCode: string, dealTitle: string) => {
+    const success = activateCoupon(couponCode);
+    
+    toast({
+      title: success ? "Coupon Activated!" : "Coupon Failed",
+      description: success ? `${couponCode} is now active for ${dealTitle}` : `Failed to activate ${couponCode}`,
+      variant: success ? "default" : "destructive"
     });
   };
 
@@ -206,6 +283,40 @@ const NavigationChatbot = ({ onNavigateToAisle, onHighlightItem }: NavigationCha
                       )}
                     </div>
                   )}
+
+                  {/* Stock information */}
+                  {message.stockInfo && (
+                    <div className="mt-3 space-y-2">
+                      {message.stockInfo.filter(store => store.inStock).slice(0, 2).map((store, index) => (
+                        <div key={index} className="text-xs bg-green-50 dark:bg-green-900/20 p-2 rounded">
+                          <div className="font-medium text-green-700 dark:text-green-300">{store.storeName}</div>
+                          <div className="text-green-600 dark:text-green-400">{store.quantity} in stock • {store.distance} mi</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Deals information */}
+                  {message.dealsInfo && (
+                    <div className="mt-3 space-y-2">
+                      {message.dealsInfo.slice(0, 2).map((deal, index) => (
+                        <div key={index} className="flex items-center justify-between gap-2 bg-orange-50 dark:bg-orange-900/20 p-2 rounded">
+                          <div className="text-xs">
+                            <div className="font-medium text-orange-700 dark:text-orange-300">{deal.discountPercentage}% OFF</div>
+                            <div className="text-orange-600 dark:text-orange-400">{deal.couponCode}</div>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleActivateCoupon(deal.couponCode, deal.title)}
+                            className="h-6 px-2 text-xs"
+                          >
+                            Activate
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   
                   <p className="text-xs opacity-70 mt-2">
                     {message.timestamp.toLocaleTimeString()}
@@ -247,17 +358,22 @@ const NavigationChatbot = ({ onNavigateToAisle, onHighlightItem }: NavigationCha
         
         {/* Quick suggestions */}
         <div className="flex flex-wrap gap-2">
-          {['Toothpaste', 'Milk', 'iPhone', 'Restrooms'].map((suggestion) => (
+          {[
+            { text: 'iPhone stock?', query: 'Is iPhone 15 in stock?' },
+            { text: 'Shoe deals', query: 'Show me deals on shoes' },
+            { text: 'Restrooms', query: 'Where are the restrooms?' },
+            { text: 'Milk location', query: 'Where can I find milk?' }
+          ].map((suggestion) => (
             <Badge
-              key={suggestion}
+              key={suggestion.text}
               variant="outline"
               className="cursor-pointer hover:bg-accent"
               onClick={() => {
-                setInput(`Where can I find ${suggestion.toLowerCase()}?`);
+                setInput(suggestion.query);
                 setTimeout(handleSendMessage, 100);
               }}
             >
-              {suggestion}
+              {suggestion.text}
             </Badge>
           ))}
         </div>

@@ -174,6 +174,13 @@ const Index = () => {
         onAddToCart={handleAddToCart}
         products={filteredProducts}
         onCheckOrderStatus={handleCheckOrderStatus}
+        onShowDeals={(category) => {
+          if (category) setSelectedCategory(category);
+          setSearchQuery(category ? `deals ${category}` : 'deals');
+        }}
+        onCheckStock={(productName) => {
+          setSearchQuery(productName);
+        }}
       />
     </div>
   );

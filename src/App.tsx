@@ -7,6 +7,8 @@ import Index from "./pages/Index";
 import SocialShopping from "./pages/SocialShopping";
 import ARStoreNavigator from "./pages/ARStoreNavigator";
 import VirtualTryOnPage from "./pages/VirtualTryOnPage";
+import StoreLocator from "./pages/StoreLocator";
+import GreenRewards from "./pages/GreenRewards";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="/social" element={<SocialShopping />} />
           <Route path="/ar-navigator" element={<ARStoreNavigator />} />
           <Route path="/virtual-tryon" element={<VirtualTryOnPage />} />
+          <Route path="/store-locator" element={<StoreLocator />} />
+          <Route path="/green-rewards" element={<GreenRewards />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

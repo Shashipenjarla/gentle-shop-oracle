@@ -9,6 +9,7 @@ import ARStoreNavigator from "./pages/ARStoreNavigator";
 import VirtualTryOnPage from "./pages/VirtualTryOnPage";
 import StoreLocator from "./pages/StoreLocator";
 import GreenRewards from "./pages/GreenRewards";
+import LoyaltyDashboard from "./pages/LoyaltyDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/virtual-tryon" element={<VirtualTryOnPage />} />
           <Route path="/store-locator" element={<StoreLocator />} />
           <Route path="/green-rewards" element={<GreenRewards />} />
+          <Route path="/loyalty-dashboard" element={<LoyaltyDashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

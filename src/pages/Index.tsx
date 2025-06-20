@@ -8,23 +8,32 @@ import VoiceInterface from '@/components/VoiceInterface';
 import PostPurchaseAssistant from '@/components/PostPurchaseAssistant';
 import SizePredictor from '@/components/SizePredictor';
 import QuickReorder from '@/components/QuickReorder';
+import ProductDetailModal from '@/components/ProductDetailModal';
+import BrowseDeals from '@/components/BrowseDeals';
+import FloatingGreenWallet from '@/components/FloatingGreenWallet';
 import { Product } from '@/components/ProductCard';
-import { sampleProducts, categories } from '@/data/products';
+import { sampleProducts, categories, getProductById } from '@/data/products';
 import { useToast } from '@/hooks/use-toast';
 import { useGreenWallet } from '@/hooks/useGreenWallet';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [wishlist, setWishlist] = useState<Product[]>([]);
   const { toast } = useToast();
   const { walletData, addGreenPoints } = useGreenWallet();
+  const navigate = useNavigate();
 
   // Filter products based on search and category
   const filteredProducts = useMemo(() => {
     return sampleProducts.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          product.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = !selectedCategory || product.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
@@ -62,6 +71,38 @@ const Index = () => {
     if (product.ecoData?.isEcoFriendly && product.ecoData.greenPoints > 0) {
       addGreenPoints(product.ecoData.greenPoints, product.name);
     }
+  };
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setIsProductModalOpen(true);
+  };
+
+  const handleProductClickById = (productId: string) => {
+    const product = getProductById(productId);
+    if (product) {
+      handleProductClick(product);
+    }
+  };
+
+  const handleAddToWishlist = (product: Product) => {
+    setWishlist(prev => {
+      const isAlreadyInWishlist = prev.some(item => item.id === product.id);
+      if (isAlreadyInWishlist) {
+        toast({
+          title: "Already in wishlist",
+          description: `${product.name} is already in your wishlist.`,
+          variant: "destructive"
+        });
+        return prev;
+      } else {
+        toast({
+          title: "Added to wishlist",
+          description: `${product.name} has been added to your wishlist.`,
+        });
+        return [...prev, product];
+      }
+    });
   };
 
   const handleUpdateQuantity = (productId: string, quantity: number) => {
@@ -112,7 +153,16 @@ const Index = () => {
       
       <HeroSection />
       
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-12 relative">
+        {/* Floating Panels */}
+        <div className="fixed left-4 top-1/2 -translate-y-1/2 z-40 space-y-4 hidden xl:block">
+          <BrowseDeals onProductClick={handleProductClickById} />
+        </div>
+        
+        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:block">
+          <FloatingGreenWallet onViewRewards={() => navigate('/green-rewards')} />
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="lg:w-64 flex-shrink-0">
@@ -130,7 +180,7 @@ const Index = () => {
           </div>
 
           {/* Main content */}
-          <div className="flex-1 space-y-8">
+          <div className="flex-1 space-y-8 xl:mr-80">
             {/* Quick Reorder */}
             <QuickReorder 
               products={sampleProducts.filter(p => p.category === 'Groceries' || p.category === 'Health & Beauty')}
@@ -156,11 +206,14 @@ const Index = () => {
             <ProductGrid
               products={filteredProducts}
               onAddToCart={handleAddToCart}
+              onProductClick={handleProductClick}
+              onAddToWishlist={handleAddToWishlist}
             />
           </div>
         </div>
       </div>
 
+      {/* Shopping Cart */}
       <ShoppingCart
         isOpen={isCartOpen}
         onOpenChange={setIsCartOpen}
@@ -169,6 +222,19 @@ const Index = () => {
         onRemoveItem={handleRemoveItem}
       />
 
+      {/* Product Detail Modal */}
+      <ProductDetailModal
+        product={selectedProduct}
+        isOpen={isProductModalOpen}
+        onClose={() => {
+          setIsProductModalOpen(false);
+          setSelectedProduct(null);
+        }}
+        onAddToCart={handleAddToCart}
+        onAddToWishlist={handleAddToWishlist}
+      />
+
+      {/* Voice Interface */}
       <VoiceInterface
         onSearch={setSearchQuery}
         onAddToCart={handleAddToCart}

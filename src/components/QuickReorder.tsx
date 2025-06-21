@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ShoppingCart, Clock, TrendingUp, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Product } from '@/components/ProductCard';
+import { Product } from '@/data/products';
 
 interface OrderHistory {
   productId: string;

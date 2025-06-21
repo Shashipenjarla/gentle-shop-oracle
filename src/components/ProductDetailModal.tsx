@@ -68,7 +68,11 @@ const ProductDetailModal = ({
               )}
               {product.ecoData?.isEcoFriendly && (
                 <div className="absolute top-4 right-4">
-                  <EcoImpactBadge ecoData={product.ecoData} />
+                  <EcoImpactBadge 
+                    carbonFootprint={product.ecoData.carbonFootprint}
+                    isEcoFriendly={product.ecoData.isEcoFriendly}
+                    greenPoints={product.ecoData.greenPoints}
+                  />
                 </div>
               )}
             </div>
@@ -129,22 +133,26 @@ const ProductDetailModal = ({
                 </div>
 
                 {/* Description */}
-                <p className="text-muted-foreground mb-6">
-                  {product.description}
-                </p>
+                {product.description && (
+                  <p className="text-muted-foreground mb-6">
+                    {product.description}
+                  </p>
+                )}
 
                 {/* Features */}
-                <div className="mb-6">
-                  <h3 className="font-semibold mb-3">Key Features</h3>
-                  <ul className="space-y-2">
-                    {product.features.map((feature, index) => (
-                      <li key={index} className="flex items-center text-sm">
-                        <div className="w-1.5 h-1.5 bg-primary rounded-full mr-3" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {product.features && product.features.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="font-semibold mb-3">Key Features</h3>
+                    <ul className="space-y-2">
+                      {product.features.map((feature, index) => (
+                        <li key={index} className="flex items-center text-sm">
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full mr-3" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 <Separator className="my-6" />
 
@@ -165,7 +173,7 @@ const ProductDetailModal = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => setQuantity(quantity + 1)}
-                      disabled={quantity >= product.stockCount}
+                      disabled={quantity >= (product.stockCount || 100)}
                     >
                       +
                     </Button>

@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Minus, Plus, Trash2, ShoppingCart as ShoppingCartIcon } from 'lucide-react';
-import { Product } from './ProductCard';
+import { Product } from '@/data/products';
 
 export interface CartItem extends Product {
   quantity: number;

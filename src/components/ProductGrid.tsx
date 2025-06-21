@@ -1,11 +1,14 @@
-import ProductCard, { Product } from './ProductCard';
+import ProductCard from './ProductCard';
+import { Product } from '@/data/products';
 
 interface ProductGridProps {
   products: Product[];
   onAddToCart: (product: Product) => void;
+  onProductClick?: (product: Product) => void;
+  onAddToWishlist?: (product: Product) => void;
 }
 
-const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
+const ProductGrid = ({ products, onAddToCart, onProductClick, onAddToWishlist }: ProductGridProps) => {
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
@@ -21,6 +24,8 @@ const ProductGrid = ({ products, onAddToCart }: ProductGridProps) => {
           key={product.id}
           product={product}
           onAddToCart={onAddToCart}
+          onProductClick={onProductClick}
+          onAddToWishlist={onAddToWishlist}
         />
       ))}
     </div>

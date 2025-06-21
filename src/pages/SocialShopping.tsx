@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import OutfitRecommendations from '@/components/OutfitRecommendations';
 import SocialSharing from '@/components/SocialSharing';
-import { Product } from '@/components/ProductCard';
+import { Product } from '@/data/products';
 import { sampleProducts } from '@/data/products';
 import { useNavigate } from 'react-router-dom';
 

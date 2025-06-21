@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Mic, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Product } from './ProductCard';
+import { Product } from '@/data/products';
 import { findDeals, getStockInfo, activateCoupon } from '@/data/deals';
 
 interface VoiceInterfaceProps {

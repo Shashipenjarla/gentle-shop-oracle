@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Star, ShoppingCart, Mail, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Product } from '@/components/ProductCard';
+import { Product } from '@/data/products';
 
 interface PostPurchaseAssistantProps {
   recentPurchases: Product[];

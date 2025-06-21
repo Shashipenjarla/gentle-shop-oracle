@@ -1,4 +1,23 @@
-import { Product } from '@/components/ProductCard';
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  originalPrice?: number;
+  image: string;
+  rating: number;
+  reviewCount: number;
+  badge?: string;
+  category: string;
+  description?: string;
+  features?: string[];
+  availability?: 'in-stock' | 'low-stock' | 'out-of-stock';
+  stockCount?: number;
+  ecoData?: {
+    carbonFootprint: number;
+    isEcoFriendly: boolean;
+    greenPoints: number;
+  };
+}
 
 export const sampleProducts: Product[] = [
   {
@@ -11,6 +30,10 @@ export const sampleProducts: Product[] = [
     reviewCount: 2847,
     badge: 'Bestseller',
     category: 'Electronics',
+    description: 'Latest iPhone with titanium design, advanced camera system, and A17 Pro chip.',
+    features: ['A17 Pro chip', '256GB storage', 'Titanium design', 'Advanced camera system', '5G connectivity'],
+    availability: 'in-stock',
+    stockCount: 50,
     ecoData: {
       carbonFootprint: 8.2,
       isEcoFriendly: false,
@@ -26,6 +49,10 @@ export const sampleProducts: Product[] = [
     rating: 4.3,
     reviewCount: 1523,
     category: 'Electronics',
+    description: 'Large 65-inch QLED smart TV with 4K UHD resolution and HDR support.',
+    features: ['65-inch QLED display', '4K UHD resolution', 'HDR support', 'Smart TV features', 'Multiple HDMI ports'],
+    availability: 'in-stock',
+    stockCount: 25,
     ecoData: {
       carbonFootprint: 12.5,
       isEcoFriendly: false,
@@ -40,7 +67,11 @@ export const sampleProducts: Product[] = [
     image: '/placeholder.svg',
     rating: 4.4,
     reviewCount: 892,
-    category: 'Clothing'
+    category: 'Clothing',
+    description: 'Comfortable running shoes with Air Max cushioning technology.',
+    features: ['Air Max cushioning', 'Breathable mesh upper', 'Durable rubber outsole', 'Lightweight design'],
+    availability: 'in-stock',
+    stockCount: 100
   },
   {
     id: '4',
@@ -227,3 +258,16 @@ export const categories = [
   'Health & Beauty',
   'Automotive'
 ];
+
+export const getFeaturedProducts = () => {
+  return sampleProducts.filter(product => 
+    product.badge === 'Bestseller' || 
+    product.badge === 'Top Rated' || 
+    product.badge === 'Popular' ||
+    product.originalPrice // Products with discounts
+  ).slice(0, 10);
+};
+
+export const getProductById = (id: string): Product | undefined => {
+  return sampleProducts.find(product => product.id === id);
+};

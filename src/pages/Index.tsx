@@ -11,7 +11,7 @@ import QuickReorder from '@/components/QuickReorder';
 import ProductDetailModal from '@/components/ProductDetailModal';
 import BrowseDeals from '@/components/BrowseDeals';
 import FloatingGreenWallet from '@/components/FloatingGreenWallet';
-import { Product } from '@/components/ProductCard';
+import { Product } from '@/data/products';
 import { sampleProducts, categories, getProductById } from '@/data/products';
 import { useToast } from '@/hooks/use-toast';
 import { useGreenWallet } from '@/hooks/useGreenWallet';

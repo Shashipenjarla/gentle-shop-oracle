@@ -4,30 +4,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import EcoImpactBadge from './EcoImpactBadge';
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  badge?: string;
-  category: string;
-  ecoData?: {
-    carbonFootprint: number; // kg CO2
-    isEcoFriendly: boolean;
-    greenPoints: number;
-  };
-}
+import { Product } from '@/data/products';
 
 interface ProductCardProps {
   product: Product;
   onAddToCart: (product: Product) => void;
+  onProductClick?: (product: Product) => void;
+  onAddToWishlist?: (product: Product) => void;
 }
 
-const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
+const ProductCard = ({ product, onAddToCart, onProductClick, onAddToWishlist }: ProductCardProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const discount = product.originalPrice 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -39,7 +25,8 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         <img 
           src={product.image} 
           alt={product.name}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+          onClick={() => onProductClick?.(product)}
         />
         
         {/* Badges */}
@@ -63,7 +50,10 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           className={`absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity ${
             isWishlisted ? 'text-red-500' : 'text-muted-foreground'
           }`}
-          onClick={() => setIsWishlisted(!isWishlisted)}
+          onClick={() => {
+            setIsWishlisted(!isWishlisted);
+            onAddToWishlist?.(product);
+          }}
         >
           <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
         </Button>

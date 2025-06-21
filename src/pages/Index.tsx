@@ -158,7 +158,7 @@ const Index = () => {
                   <span className="text-sm font-semibold bg-white/20 px-3 py-1 rounded-full">TODAY'S DEAL</span>
                 </div>
                 <h2 className="text-3xl font-bold mb-1">50% OFF Samsung Smart TVs</h2>
-                <p className="text-lg opacity-90">Starting from $449.99 - Limited time offer!</p>
+                <p className="text-lg opacity-90">Starting from ₹37,349 - Limited time offer!</p>
               </div>
             </div>
             <div className="text-center md:text-right">

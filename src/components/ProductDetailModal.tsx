@@ -118,11 +118,11 @@ const ProductDetailModal = ({
                 {/* Price */}
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-3xl font-bold text-primary">
-                    ${product.price.toFixed(2)}
+                    ₹{product.price.toLocaleString('en-IN')}
                   </span>
                   {product.originalPrice && (
                     <span className="text-lg text-muted-foreground line-through">
-                      ${product.originalPrice.toFixed(2)}
+                      ₹{product.originalPrice.toLocaleString('en-IN')}
                     </span>
                   )}
                 </div>
@@ -203,7 +203,7 @@ const ProductDetailModal = ({
                 <div className="space-y-3 text-sm">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Truck className="h-4 w-4" />
-                    Free shipping on orders over $35
+                    Free shipping on orders over ₹2,900
                   </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <RotateCcw className="h-4 w-4" />

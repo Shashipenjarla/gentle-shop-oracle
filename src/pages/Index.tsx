@@ -9,13 +9,10 @@ import PostPurchaseAssistant from '@/components/PostPurchaseAssistant';
 import SizePredictor from '@/components/SizePredictor';
 import QuickReorder from '@/components/QuickReorder';
 import ProductDetailModal from '@/components/ProductDetailModal';
-import BrowseDeals from '@/components/BrowseDeals';
-import FloatingGreenWallet from '@/components/FloatingGreenWallet';
 import { Product } from '@/data/products';
-import { sampleProducts, categories, getProductById } from '@/data/products';
+import { sampleProducts, categories } from '@/data/products';
 import { useToast } from '@/hooks/use-toast';
 import { useGreenWallet } from '@/hooks/useGreenWallet';
-import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,7 +24,6 @@ const Index = () => {
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const { toast } = useToast();
   const { walletData, addGreenPoints } = useGreenWallet();
-  const navigate = useNavigate();
 
   // Filter products based on search and category
   const filteredProducts = useMemo(() => {
@@ -76,13 +72,6 @@ const Index = () => {
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
     setIsProductModalOpen(true);
-  };
-
-  const handleProductClickById = (productId: string) => {
-    const product = getProductById(productId);
-    if (product) {
-      handleProductClick(product);
-    }
   };
 
   const handleAddToWishlist = (product: Product) => {
@@ -154,26 +143,6 @@ const Index = () => {
       <HeroSection />
       
       <div className="container mx-auto px-4 py-12 relative">
-        {/* Floating Panels - Always Visible */}
-        <div className="fixed left-4 top-1/2 -translate-y-1/2 z-40 space-y-4 hidden lg:block">
-          <BrowseDeals onProductClick={handleProductClickById} />
-        </div>
-        
-        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden lg:block">
-          <FloatingGreenWallet onViewRewards={() => navigate('/green-rewards')} />
-        </div>
-
-        {/* Mobile Floating Panels */}
-        <div className="lg:hidden">
-          <div className="fixed bottom-20 left-4 z-40">
-            <BrowseDeals onProductClick={handleProductClickById} />
-          </div>
-          
-          <div className="fixed bottom-20 right-4 z-40">
-            <FloatingGreenWallet onViewRewards={() => navigate('/green-rewards')} />
-          </div>
-        </div>
-
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <div className="lg:w-64 flex-shrink-0">
@@ -191,7 +160,7 @@ const Index = () => {
           </div>
 
           {/* Main content */}
-          <div className="flex-1 space-y-8 lg:mr-80 xl:mr-80">
+          <div className="flex-1 space-y-8">
             {/* Quick Reorder */}
             <QuickReorder 
               products={sampleProducts.filter(p => p.category === 'Groceries' || p.category === 'Health & Beauty')}

@@ -21,7 +21,7 @@ const BrowseDeals = ({ onProductClick }: BrowseDealsProps) => {
   };
 
   return (
-    <Card className="w-80 shadow-lg border-primary/20 animate-slide-in-right">
+    <Card className="w-80 max-w-[calc(100vw-2rem)] shadow-lg border-primary/20 animate-slide-in-right">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Tag className="h-5 w-5 text-primary" />

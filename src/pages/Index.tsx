@@ -154,13 +154,24 @@ const Index = () => {
       <HeroSection />
       
       <div className="container mx-auto px-4 py-12 relative">
-        {/* Floating Panels */}
-        <div className="fixed left-4 top-1/2 -translate-y-1/2 z-40 space-y-4 hidden xl:block">
+        {/* Floating Panels - Always Visible */}
+        <div className="fixed left-4 top-1/2 -translate-y-1/2 z-40 space-y-4 hidden lg:block">
           <BrowseDeals onProductClick={handleProductClickById} />
         </div>
         
-        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden xl:block">
+        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden lg:block">
           <FloatingGreenWallet onViewRewards={() => navigate('/green-rewards')} />
+        </div>
+
+        {/* Mobile Floating Panels */}
+        <div className="lg:hidden">
+          <div className="fixed bottom-20 left-4 z-40">
+            <BrowseDeals onProductClick={handleProductClickById} />
+          </div>
+          
+          <div className="fixed bottom-20 right-4 z-40">
+            <FloatingGreenWallet onViewRewards={() => navigate('/green-rewards')} />
+          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -180,7 +191,7 @@ const Index = () => {
           </div>
 
           {/* Main content */}
-          <div className="flex-1 space-y-8 xl:mr-80">
+          <div className="flex-1 space-y-8 lg:mr-80 xl:mr-80">
             {/* Quick Reorder */}
             <QuickReorder 
               products={sampleProducts.filter(p => p.category === 'Groceries' || p.category === 'Health & Beauty')}

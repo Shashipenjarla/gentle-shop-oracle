@@ -44,7 +44,7 @@ const FloatingGreenWallet = ({ onViewRewards }: FloatingGreenWalletProps) => {
   const levelInfo = getNextLevelInfo();
 
   return (
-    <Card className="w-80 shadow-lg border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 animate-slide-in-right">
+    <Card className="w-80 max-w-[calc(100vw-2rem)] shadow-lg border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 animate-slide-in-right">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Wallet className="h-5 w-5 text-green-600" />

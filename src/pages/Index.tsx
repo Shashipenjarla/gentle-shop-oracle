@@ -142,6 +142,34 @@ const Index = () => {
       
       <HeroSection />
       
+      {/* Today's Deal Banner */}
+      <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
+              <img 
+                src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=120&h=120&fit=crop" 
+                alt="Samsung Smart TV Deal" 
+                className="w-24 h-24 object-cover rounded-lg shadow-lg"
+              />
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">⚡</span>
+                  <span className="text-sm font-semibold bg-white/20 px-3 py-1 rounded-full">TODAY'S DEAL</span>
+                </div>
+                <h2 className="text-3xl font-bold mb-1">50% OFF Samsung Smart TVs</h2>
+                <p className="text-lg opacity-90">Starting from $449.99 - Limited time offer!</p>
+              </div>
+            </div>
+            <div className="text-center md:text-right">
+              <div className="text-6xl font-bold mb-2">50%</div>
+              <div className="text-xl font-semibold">OFF</div>
+              <div className="text-sm opacity-75 mt-2">🔥 Hurry, while stocks last!</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <div className="container mx-auto px-4 py-12 relative">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}

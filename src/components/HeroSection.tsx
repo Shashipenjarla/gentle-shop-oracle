@@ -54,17 +54,31 @@ const HeroSection = () => {
           <div className="relative">
             <div className="bg-primary-foreground/10 rounded-2xl p-8 backdrop-blur-sm">
               <img 
-                src="/placeholder.svg" 
-                alt="Happy family shopping" 
+                src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&h=400&fit=crop" 
+                alt="Shopping deals and electronics" 
                 className="w-full h-80 object-cover rounded-lg"
               />
             </div>
             
-            {/* Floating deal card */}
-            <div className="absolute -bottom-4 -left-4 bg-card text-card-foreground p-4 rounded-lg shadow-lg">
-              <p className="text-sm font-medium">Today's Deal</p>
-              <p className="text-2xl font-bold text-green-600">50% OFF</p>
-              <p className="text-sm text-muted-foreground">Electronics</p>
+            {/* Enhanced floating deal card */}
+            <div className="absolute -bottom-6 -left-6 bg-gradient-to-r from-red-500 to-pink-500 text-white p-6 rounded-xl shadow-xl animate-pulse">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 rounded-full p-2">
+                  <img 
+                    src="https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=60&h=60&fit=crop" 
+                    alt="Deal item" 
+                    className="w-12 h-12 object-cover rounded-full"
+                  />
+                </div>
+                <div>
+                  <p className="text-sm font-medium opacity-90">⚡ TODAY'S DEAL</p>
+                  <p className="text-3xl font-bold">50% OFF</p>
+                  <p className="text-sm opacity-90">Samsung Smart TVs</p>
+                </div>
+              </div>
+              <div className="mt-3 text-xs opacity-75">
+                🔥 Limited time offer - Hurry up!
+              </div>
             </div>
           </div>
         </div>
